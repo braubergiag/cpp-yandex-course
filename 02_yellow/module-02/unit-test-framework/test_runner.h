@@ -14,6 +14,11 @@
 #include <iomanip>
 
 
+
+#define RUN_TEST(tr,func) \
+    tr.RunTest(func,#func)
+
+
 template <typename U , typename V>
 void AssertEqual(const U & u, const V & v,const std::string& hint = {}){
     std::stringstream ss;
@@ -21,8 +26,22 @@ void AssertEqual(const U & u, const V & v,const std::string& hint = {}){
         ss  << std::setw(20) <<  "Assertion failed:\t" << u << " != " << v << std::setw(10) << "(" << hint << ")";
         throw std::runtime_error(ss.str());
     }
-
 }
+
+#define ASSERT_EQUAL(u,v) {                     \
+    std::stringstream info;                     \
+    info    << #u << " != " << #v << ","        \
+            << __FILE__ << ":" << __LINE__;     \
+    AssertEqual(u,v,info.str());                \
+}
+
+#define ASSERT(u) {                       \
+    std::stringstream info;                     \
+    info    << #u << " is false" << ","         \
+            << __FILE__ << ":" << __LINE__;     \
+    Assert(u,info.str());                       \
+}
+
 
 void Assert(bool val, const std::string & hint = {}){
     AssertEqual(val, true,hint);

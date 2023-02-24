@@ -3,17 +3,18 @@
 #include <algorithm>
 #include <numeric>
 #include <chrono>
-#include "test_runner.h"
-#include "date.h"
 #include <sstream>
 #include <ctime>
 #include <map>
+//#include "test_runner.h"
 using namespace std::chrono;
 
 
 class BudgetManager {
 private:
     static constexpr int first_day_timestamp = 10'956;
+    static constexpr int cseconds_in_day = 86400;
+
 
 public:
         BudgetManager()  {
@@ -25,16 +26,23 @@ public:
     void Earn(const std::string & date_from,const std::string & date_to, int earning) {
         auto tp_from = ParseDateToTimestamp(date_from);
         auto tp_to = ParseDateToTimestamp(date_to);
-
-        double earning_by_each_day = earning / ((tp_to - tp_from) + 1);
+#if 1
+        auto temp{tp_from};
+        tp_from = std::min(tp_from,tp_to);
+        tp_to = std::max(temp,tp_to);
+#endif
+        double earning_by_each_day = static_cast<double>(earning) / ((tp_to - tp_from) + 1);
         for (int timestamp = tp_from; timestamp <= tp_to; ++timestamp) {
-            earnings_[timestamp - first_day_timestamp] += earning_by_each_day;
+            earnings_[timestamp] += earning_by_each_day;
         }
     }
     double ComputeIncome(const std::string & date_from,const std::string & date_to) {
-        auto tp_from = ParseDateToTimestamp(date_from) - first_day_timestamp;
-        auto tp_to = ParseDateToTimestamp(date_to) - first_day_timestamp;
+        auto tp_from = ParseDateToTimestamp(date_from);
+        auto tp_to = ParseDateToTimestamp(date_to);
 
+        auto temp{tp_from};
+        tp_from = std::min(tp_from,tp_to);
+        tp_to = std::max(temp,tp_to);
         auto lb = lower_bound(begin(earnings_),end(earnings_),tp_from);
         auto ub = upper_bound(begin(earnings_),end(earnings_),tp_to);
 
@@ -51,32 +59,49 @@ private:
         std::tm tm_1 = {};
         strptime(date.c_str(), "%Y-%m-%d", &tm_1);
         auto tp_1 = std::chrono::system_clock::from_time_t(std::mktime(&tm_1));
-        int timestamp = time_point_cast<days>(tp_1)
+        ::uint64_t timestamp = time_point_cast<seconds>(tp_1)
                 .time_since_epoch()
                 .count();
-        return timestamp;
+        timestamp /= cseconds_in_day;
+        return (timestamp - first_day_timestamp);
     }
 
 private:
     std::vector<double> earnings_;
 };
+#if 0
+void test_1(){
+    BudgetManager bm;
+    bm.Earn("2000-01-01","2000-01-03",30);
+    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2000-01-01"),10);
+    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2000-01-02"),20);
+    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2000-01-03"),30);
+    ASSERT_EQUAL(bm.ComputeIncome("2000-01-03","2000-01-01"),30);
 
 
+}
+void test_2(){
+    BudgetManager bm;
+    bm.Earn("2000-01-02","2000-01-06",20);
+    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2001-01-01"),20);
+    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2000-01-03"),8);
+    bm.Earn("2000-01-03","2000-01-03",10);
+    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2001-01-01"),30);
+}
 
-int main(){
+void test_3(){
+    BudgetManager bm;
+    bm.Earn("2000-01-06","2000-01-02",20);
+    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2001-01-01"),20);
+    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2000-01-03"),8);
+    bm.Earn("2000-01-03","2000-01-03",10);
+    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2001-01-01"),30);
+}
+#endif
+void testing_date(){
 
 
-
-
-    const int number_of_years{100};
-    const int start_year{2000};
-    const int days_in_year{365};
-    std::vector<int> years(number_of_years);
-    std::vector<int> leap_years;
-    std::iota(begin(years),end(years),start_year);
-    std::copy_if(begin(years), end(years),back_inserter(leap_years),Year::is_leap_year);
-
-#if 1
+#if 0
 
     std::tm tm_1 = {};
     std::tm tm_2 = {};
@@ -85,16 +110,40 @@ int main(){
     strptime("2000-01-01", "%Y-%m-%d", &tm_2);
     auto tp_1 = std::chrono::system_clock::from_time_t(std::mktime(&tm_1));
     auto tp_2 = std::chrono::system_clock::from_time_t(std::mktime(&tm_2));
-    int timestamp = time_point_cast<days>(tp_2)
+    ::uint64_t timestamp = time_point_cast<seconds>(tp_1)
             .time_since_epoch()
             .count();
+#endif
+};
+int main(){
+
+#if 0
+    TestRunner tr;
+    RUN_TEST(tr,test_1);
+    RUN_TEST(tr,test_2);
+    RUN_TEST(tr,test_3);
+#endif
+
+
+
+#if 1
+    int q{0};
+    std::cin >> q;
+    std::string command,date_from,date_to;
+    double value;
 
     BudgetManager bm;
-    bm.Earn("2000-01-02","2000-01-06",20);
-    std::cout << bm.ComputeIncome("2000-01-01","2000-01-06") << std::endl;
-    std::cout << bm.ComputeIncome("2000-01-01","2000-01-03") << std::endl;
-    bm.Earn("2000-01-03","2000-01-03",10);
-    std::cout << bm.ComputeIncome("2000-01-01","2000-01-07") << std::endl;
+    std::cout.precision(25);
+    while (q--) {
+        std::cin >> command;
+        if (command == "Earn"){
+            std::cin >> date_from >> date_to >> value;
+            bm.Earn(date_from,date_to,value);
+        } else if (command == "ComputeIncome"){
+            std::cin >> date_from >> date_to;
+            std::cout << bm.ComputeIncome(date_from,date_to) << "\n";
+        }
+    }
 
 
 #endif

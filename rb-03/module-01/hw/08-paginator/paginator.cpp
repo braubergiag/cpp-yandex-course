@@ -53,11 +53,11 @@ template <typename C>
 auto Paginate(C& c, size_t page_size) {
   // Реализуйте этот шаблон функции
 
-  Paginator<typename C::iterator> p(c.begin(),c.end(), page_size);
+  Paginator p(c.begin(),c.end(), page_size);
   return p;
 
 }
-
+#if 0
 void TestPageCounts() {
   vector<int> v(15);
 
@@ -122,7 +122,6 @@ void TestConstContainer() {
   const vector<string> expected = {"abcdefghij", "klmnopqrst", "uvwxyz"};
   ASSERT_EQUAL(pages, expected);
 }
-
 void TestPagePagination() {
   vector<int> v(22);
   iota(begin(v), end(v), 1);
@@ -148,14 +147,14 @@ void TestPagePagination() {
   };
   ASSERT_EQUAL(lines, expected);
 }
-
+#endif
 int main() {
   TestRunner tr;
   RUN_TEST(tr, TestPageCounts);
-  // RUN_TEST(tr, TestLooping);
-  // RUN_TEST(tr, TestModification);
-  // RUN_TEST(tr, TestPageSizes);
-  // RUN_TEST(tr, TestConstContainer);
-  // RUN_TEST(tr, TestPagePagination);
+  RUN_TEST(tr, TestLooping);
+  RUN_TEST(tr, TestModification);
+  RUN_TEST(tr, TestPageSizes);
+  RUN_TEST(tr, TestConstContainer);
+  RUN_TEST(tr, TestPagePagination);
 }
 

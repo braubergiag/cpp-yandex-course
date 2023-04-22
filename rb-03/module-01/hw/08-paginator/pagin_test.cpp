@@ -1,4 +1,3 @@
-#include "../test_runner.h"
 
 #include <numeric>
 #include <iostream>
@@ -10,15 +9,15 @@ using namespace std;
 // Реализуйте шаблон класса Paginator
 
 template <typename Iterator>
-class Page {
+class IteratorRange {
   private:
     Iterator begin_, end_;
-    size_t page_size_;
+    size_t size_;
   public:
-    Page(Iterator begin, Iterator end) : begin_(begin), end_(end), page_size_(end - begin) {}
+    IteratorRange(Iterator begin, Iterator end) : begin_(begin), end_(end), size_(distance(begin,end))  {}
     Iterator begin() const {return begin_;}
     Iterator end() const {return end_;}
-    size_t size() const {return page_size_;}
+    size_t size() const {return size_;}
 
 };
 
@@ -26,12 +25,11 @@ class Page {
 template <typename Iterator>
 class Paginator {
   private:
-    vector<Page<Iterator>> pages_;
+    vector<IteratorRange<Iterator>> pages_;
     
 
   public:
     Paginator(Iterator begin, Iterator end, size_t page_size) {
-          size_t n = end - begin;
           auto it =  begin;
           while (it < end){
             auto dist = static_cast<size_t>(distance(it,end));
@@ -39,35 +37,34 @@ class Paginator {
             pages_.push_back({it,next});
             it = next;
           }
+
+          for (auto left = distance(begin,end); left > 0;) {
+              auto current_page_size = min(page_size, left);
+              Iterator current_page_end = next(begin, current_page_size);
+              pages_.push_back({begin,current_page_end});
+
+              left -= current_page_size;
+              begin = current_page_end;
+
+          }
           
       }
-    vector<Page<Iterator>> pages() const {pages_;}
     auto begin() const {return pages_.begin();}
     auto end() const {return pages_.end();}
     size_t size() const {return pages_.size();}
   
 };
-template <typename Container>
-auto Paginate(Container & c, size_t page_size){
-    Paginator<typename Container::iterator> p(c.begin(),c.end(),page_size);
-    return p.pages();
+
+
+template <typename C>
+auto Paginate(C& c, size_t page_size) {
+  return Paginator(c.begin(),c.end(), page_size);
+
 }
 int main(){
 
 
-    vector<vector<int>> v{{1,2,3},{1,2,3}};
-    vector<int> vv{1,2,3};
-    Paginator<vector<vector<int>>::iterator> p(begin(v), end(v),2);
 
-    for (auto &&page : Paginate(v,2))
-    {
-        for (auto &&app : Paginate(page,1))
-        {
-            std::cout << app << " ";
-        }
-        cout << "\n";
-        
-    }
     
 
 

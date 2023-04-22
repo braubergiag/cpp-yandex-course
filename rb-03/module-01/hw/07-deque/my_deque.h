@@ -42,7 +42,7 @@ class Deque {
                 return front_[pos];
             }
             else 
-                return back_[index % front_.size()];
+                return back_[index - front_.size()];
         };
         T & operator[](size_t index) {
             return const_cast<T&>(static_cast<const Deque&>(*this)[index]);

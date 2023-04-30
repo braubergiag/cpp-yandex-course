@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <vector>
 #include <string>
+#include <set>
+#include <numeric>
+#include <unordered_map>
 
 
 using namespace std;
@@ -13,7 +16,7 @@ bool comp(const pair<int,int> & lhs, const pair<int,int>& rhs){
 }
 
 
-class EbookManager {
+class EbookManagerSlowV1 {
 
 public:
 
@@ -37,14 +40,10 @@ public:
         });
         if (it != end(info_)){
             if (info_.size() == 1) return 1;
-            auto dst = distance(begin(info_), it);
+            auto [lb,ub]  = std::equal_range(begin(info_), end(info_),*it,comp);
+            auto dst = distance(begin(info_), lb);
 
-            auto page = it->second;
-            while (it->second == current_page && it != end(info_)) {
-                ++it;
-            }
 
-            auto second_dst = it - dst;
             return (double) (dst) / (double) (info_.size() - 1);
         } else {
             return 0;
@@ -52,6 +51,7 @@ public:
 
 
     }
+    size_t size() const {return info_.size();}
 
 
 
@@ -63,8 +63,69 @@ private:
 };
 
 
+class EbookManagerSlowV2 {
+
+public:
+    void read(int user_id, int page_read){
+        if (info_.count(user_id)){
+            auto old_page = info_[user_id];
+            page_progress_.erase(  page_progress_.find(old_page));
+        }
+        info_[user_id] = page_read;
+        page_progress_.insert(page_read);
+    }
+
+    double cheer(int user_id){
+
+        if (info_.count(user_id)) {
+            if (info_.size() == 1) return  1;
+
+            auto page = info_[user_id];
+            auto dst = distance(begin(page_progress_),page_progress_.find(page));
+            return (double) (dst) / (double) (info_.size() - 1);
+        } else return 0;
+    }
+    size_t size() const {return info_.size();}
+
+
+private:
+    std::multiset<int> page_progress_;
+    std::unordered_map<int,int> info_;
+};
+class EbookManager {
+public:
+    EbookManager() {
+        book_pages_.resize(1010,0);
+    }
+    void read(int user_id, int page_read) {
+        if (info_.count(user_id)){
+            auto old_page = info_[user_id];
+            --book_pages_[old_page];
+        }
+        info_[user_id] = page_read;
+        ++book_pages_[page_read];
+
+    }
+
+    double cheer(int user_id){
+        if (info_.count(user_id)){
+            if (info_.size() == 1) return 1;
+            auto page = info_[user_id];
+
+            auto users_behind = std::accumulate(begin(book_pages_), begin(book_pages_) + page,0);
+            return (double) (users_behind) / (double) (info_.size() - 1);
+
+
+        } else return 0;
+    }
+    size_t size() const {return info_.size();}
+
+private:
+    std::vector<int> book_pages_;
+    std::unordered_map<int,int> info_;
+};
 #if 0
-//#include "../test_runner.h"
+#include "../test_runner.h"
 void test_1(){
 
     EbookManager em;
@@ -88,12 +149,30 @@ void test_1(){
 
 
 }
+void test_repeated_values(){
+    EbookManager em;
 
+    em.read(1,1);
+    em.read(2,1);
+    em.read(3,2);
+    em.read(4,2);
+    em.read(5,2);
+    em.read(6,3);
+
+    ASSERT_EQUAL(em.cheer(1),0);
+    ASSERT_EQUAL(em.cheer(2),0);
+    ASSERT_EQUAL(em.cheer(3), (double) 2 / (em.size() - 1) );
+    ASSERT_EQUAL(em.cheer(4), (double) 2 / (em.size() - 1) );
+    ASSERT_EQUAL(em.cheer(5), (double) 2 / (em.size() - 1) );
+    ASSERT_EQUAL(em.cheer(6), (double) 5 / (em.size() - 1) );
+
+}
 #endif
 void test(){
 #if 0
     TestRunner tr;
     RUN_TEST(tr,test_1);
+    RUN_TEST(tr,test_repeated_values);
 #endif
 }
 

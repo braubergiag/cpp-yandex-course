@@ -1,3 +1,0 @@
-project(ut-framework)
-
-add_executable(${PROJECT_NAME} main.cc)

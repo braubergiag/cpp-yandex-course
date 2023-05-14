@@ -1,0 +1,3 @@
+/home/igor/Programming/C++/cpp-yandex-course/03-rb/m-04/linked-list/build/CMakeFiles/LinkedList.dir
+/home/igor/Programming/C++/cpp-yandex-course/03-rb/m-04/linked-list/build/CMakeFiles/edit_cache.dir
+/home/igor/Programming/C++/cpp-yandex-course/03-rb/m-04/linked-list/build/CMakeFiles/rebuild_cache.dir

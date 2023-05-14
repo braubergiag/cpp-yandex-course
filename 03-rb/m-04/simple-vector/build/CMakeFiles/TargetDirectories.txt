@@ -1,0 +1,3 @@
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector/build/CMakeFiles/rebuild_cache.dir
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector/build/CMakeFiles/SimpleVector.dir
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector/build/CMakeFiles/edit_cache.dir

@@ -67,10 +67,10 @@ RM = /snap/cmake/852/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector
+CMAKE_SOURCE_DIR = /home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector/build
+CMAKE_BINARY_DIR = /home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -99,9 +99,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector/build/CMakeFiles /home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/build/CMakeFiles /home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -130,44 +130,44 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named SimpleVector
+# Target rules for targets named StringSet
 
 # Build rule for target.
-SimpleVector: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 SimpleVector
-.PHONY : SimpleVector
+StringSet: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 StringSet
+.PHONY : StringSet
 
 # fast build rule for target.
-SimpleVector/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SimpleVector.dir/build.make CMakeFiles/SimpleVector.dir/build
-.PHONY : SimpleVector/fast
+StringSet/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/StringSet.dir/build.make CMakeFiles/StringSet.dir/build
+.PHONY : StringSet/fast
 
-simple_vector.o: simple_vector.cpp.o
+StringSet.o: StringSet.cpp.o
 
-.PHONY : simple_vector.o
+.PHONY : StringSet.o
 
 # target to build an object file
-simple_vector.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SimpleVector.dir/build.make CMakeFiles/SimpleVector.dir/simple_vector.cpp.o
-.PHONY : simple_vector.cpp.o
+StringSet.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/StringSet.dir/build.make CMakeFiles/StringSet.dir/StringSet.cpp.o
+.PHONY : StringSet.cpp.o
 
-simple_vector.i: simple_vector.cpp.i
+StringSet.i: StringSet.cpp.i
 
-.PHONY : simple_vector.i
+.PHONY : StringSet.i
 
 # target to preprocess a source file
-simple_vector.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SimpleVector.dir/build.make CMakeFiles/SimpleVector.dir/simple_vector.cpp.i
-.PHONY : simple_vector.cpp.i
+StringSet.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/StringSet.dir/build.make CMakeFiles/StringSet.dir/StringSet.cpp.i
+.PHONY : StringSet.cpp.i
 
-simple_vector.s: simple_vector.cpp.s
+StringSet.s: StringSet.cpp.s
 
-.PHONY : simple_vector.s
+.PHONY : StringSet.s
 
 # target to generate assembly for a file
-simple_vector.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SimpleVector.dir/build.make CMakeFiles/SimpleVector.dir/simple_vector.cpp.s
-.PHONY : simple_vector.cpp.s
+StringSet.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/StringSet.dir/build.make CMakeFiles/StringSet.dir/StringSet.cpp.s
+.PHONY : StringSet.cpp.s
 
 # Help Target
 help:
@@ -177,10 +177,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... SimpleVector"
-	@echo "... simple_vector.o"
-	@echo "... simple_vector.i"
-	@echo "... simple_vector.s"
+	@echo "... StringSet"
+	@echo "... StringSet.o"
+	@echo "... StringSet.i"
+	@echo "... StringSet.s"
 .PHONY : help
 
 

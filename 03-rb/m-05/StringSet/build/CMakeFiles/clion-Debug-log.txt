@@ -1,4 +1,4 @@
-/snap/cmake/current/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector
+/snap/cmake/current/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S /home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet -B /home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/build
 -- The C compiler identification is GNU 9.4.0
 -- The CXX compiler identification is GNU 9.4.0
 -- Detecting C compiler ABI info
@@ -13,4 +13,4 @@
 -- Detecting CXX compile features - done
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector/build
+-- Build files have been written to: /home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/build

@@ -1,4 +1,4 @@
-# Install script for directory: /home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector
+# Install script for directory: /home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

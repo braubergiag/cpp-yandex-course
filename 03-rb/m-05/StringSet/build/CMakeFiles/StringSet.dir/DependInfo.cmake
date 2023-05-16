@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector/simple_vector.cpp" "/home/glushkov/projects/cpp-yandex-course/03-rb/m-04/simple-vector/build/CMakeFiles/SimpleVector.dir/simple_vector.cpp.o"
+  "/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/StringSet.cpp" "/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/build/CMakeFiles/StringSet.dir/StringSet.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

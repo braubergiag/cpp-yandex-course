@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/Sportsman/main.cpp
+forward_list
+-
+list
+-
+iostream
+-
+algorithm
+-
+set
+-
+map
+-
+random
+-
+unordered_set
+-
+

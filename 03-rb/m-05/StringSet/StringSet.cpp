@@ -1,7 +1,9 @@
 #include "../test_runner.h"
 #include <iostream>
 #include <vector>
+#include <deque>
 #include <set>
+
 
 using namespace std;
 
@@ -9,14 +11,14 @@ using namespace std;
 class StringSet {
 public:
     void Add(const string & str,int priority) {
-        sorted_.insert({str,priority});
         data_.push_back(str);
+        sorted_.insert({(int) data_.size() - 1,priority});
     }
     const string& FindLast() const {
         return data_.back();
     }
     const string & FindBest() const {
-        return prev(sorted_.end())->str_;
+        return data_[prev(sorted_.end())->idx_];
     }
 
 private:
@@ -25,7 +27,7 @@ private:
         bool operator<(const StringItem & other) const {
             return priority_ < other.priority_;
         }
-        string str_;
+        int idx_;
         int priority_;
 
     };

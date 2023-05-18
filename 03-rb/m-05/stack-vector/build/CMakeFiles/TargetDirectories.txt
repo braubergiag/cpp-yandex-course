@@ -1,0 +1,3 @@
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/stack-vector/build/CMakeFiles/rebuild_cache.dir
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/stack-vector/build/CMakeFiles/StackVector.dir
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/stack-vector/build/CMakeFiles/edit_cache.dir

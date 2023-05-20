@@ -1,0 +1,3 @@
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/build/CMakeFiles/rebuild_cache.dir
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/build/CMakeFiles/StringSet.dir
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/build/CMakeFiles/edit_cache.dir

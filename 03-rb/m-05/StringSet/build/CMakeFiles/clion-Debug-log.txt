@@ -1,0 +1,4 @@
+/snap/cmake/current/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S /home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet -B /home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/build
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/build

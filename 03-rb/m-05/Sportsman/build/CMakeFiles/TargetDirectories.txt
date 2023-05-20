@@ -1,0 +1,3 @@
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/Sportsman/build/CMakeFiles/rebuild_cache.dir
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/Sportsman/build/CMakeFiles/Sportsman.dir
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/Sportsman/build/CMakeFiles/edit_cache.dir

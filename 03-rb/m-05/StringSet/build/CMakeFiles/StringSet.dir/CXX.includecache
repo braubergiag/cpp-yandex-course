@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/StringSet/StringSet.cpp
+../test_runner.h
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/test_runner.h
+iostream
+-
+vector
+-
+deque
+-
+set
+-
+
+/home/glushkov/projects/cpp-yandex-course/03-rb/m-05/test_runner.h
+vector
+-
+map
+-
+string
+-
+iostream
+-
+tuple
+-
+utility
+-
+array
+-
+set
+-
+sstream
+-
+iomanip
+-
+

@@ -6,223 +6,148 @@
 #include <map>
 #include <iomanip>
 #include <array>
-
-
-
-
-
-
-namespace Date {
-    class Year {
-    public:
-        explicit Year(int year = 2000) : year_(year) {};
-        int year() const {return year_;}
-
-
-    private:
-        int year_;
-
-    };
-
-    class Month {
-    public:
-        explicit Month(int month = 1) : month_(month) {}
-        int month() const {return month_;}
-    private:
-        int month_;
-    };
-    class Day {
-    public:
-        explicit Day(int day = 1) : day_(day) {}
-        int day() const {return day_;}
-    private:
-        int day_;
-    };
-    class Date;
-    inline const Date & get_default_date();
-    inline std::istream & operator>>(std::istream & is, Date & date);
-
-    class Date {
-    public:
-        Date(): year_(get_default_date().year_),
-                month_(get_default_date().month_),
-                day_(get_default_date().day_){}
-        Date(Year year, Month month, Day day) : year_(year), month_(month), day_(day) {};
-        Date(const std::string & s) {
-            std::stringstream ss(s);
-            ss >> (*this);
-
-
-        }
-    public:
-        int year() const {return year_.year();}
-        int month() const {return month_.month();}
-        int day() const {return day_.day();}
-
-        void set_day(int dd) { day_ = Day(dd);}
-        void set_month(int mm) {month_ = Month(mm);}
-        void set_year(int yy) {year_ = Year(yy);}
-    private:
-        Year year_;
-        Month month_;
-        Day day_;
-    };
-
-    inline const Date & get_default_date(){
-
-        const static Date default_date(Year(2000),Month(1),Day(1));
-        return default_date;
-    }
-    inline bool operator<(const Date &lhs, const Date &rhs) {
-        return std::make_tuple(lhs.year(),lhs.month(),lhs.day()) < std::make_tuple(rhs.year(),rhs.month(),rhs.day());
-    }
-    inline bool operator>(const Date &lhs, const Date &rhs) {
-        return std::make_tuple(lhs.year(),lhs.month(),lhs.day()) > std::make_tuple(rhs.year(),rhs.month(),rhs.day());
-    }
-    inline bool operator>=(const Date &lhs, const Date &rhs) {
-        return std::make_tuple(lhs.year(),lhs.month(),lhs.day()) >= std::make_tuple(rhs.year(),rhs.month(),rhs.day());
-    }
-
-    inline bool operator<=(const Date &lhs, const Date &rhs) {
-        return std::make_tuple(lhs.year(),lhs.month(),lhs.day()) <= std::make_tuple(rhs.year(),rhs.month(),rhs.day());
-
-    }
-    inline std::ostream& operator<<(std::ostream & os, const Date & date){
-        return os << std::setw(4) << std::setfill('0') << date.year() << '-' <<
-                  std::setw(2) << date.month() << '-' <<
-                  std::setw(2) << date.day();
-    }
-
-
-    inline std::istream & operator>>(std::istream & is, Date & date){
-        int day, month, year;
-        char ch;
-        is >> year >> ch >> month >> ch >> day;
-        date.set_year(year);
-        date.set_month(month);
-        date.set_day(day);
-        return is;
-    }
-
+static constexpr int first_day_timestamp = 98614; // 1700-01-01
+static constexpr int last_day_timestamp = 146096; // 2100-01-01
+static constexpr int cseconds_in_day = 86400;
+static constexpr int cseconds_offset = 10'800;
+using namespace std::chrono;
+auto ParseDateToTimestamp(const std::string & date)  {
+    std::tm tm_1 = {};
+    strptime(date.c_str(), "%Y-%m-%d", &tm_1);
+    auto tp_1 = std::chrono::system_clock::from_time_t(std::mktime(&tm_1));
+//    std::cout << date << " " << std::mktime(&tm_1) << " " << ((std::mktime(&tm_1) + cseconds_offset) / cseconds_in_day)<< std::endl;
+    return  ((std::mktime(&tm_1) + cseconds_offset) / cseconds_in_day) + first_day_timestamp;
 }
 
-
-
-double operator+(const std::pair<Date::Date,double> &lhs,
-        const std::pair<Date::Date,double>& rhs){
-    return lhs.second + rhs.second;
-}
-bool operator<(const std::pair<Date::Date,double> &lhs,
-                 const std::pair<Date::Date,double>& rhs){
-    return lhs.first < rhs.first;
-
-}
-bool operator>=(const std::pair<Date::Date,double> &lhs,
-                 const std::pair<Date::Date,double>& rhs){
-    return lhs.first >= rhs.first;
-
-}
-bool operator>(const std::pair<Date::Date,double> &lhs,
-                 const std::pair<Date::Date,double>& rhs){
-    return lhs.first > rhs.first;
-
-}
-class BudgetManager {
-private:
-public:
-        BudgetManager()  {}
-
-
-    void Earn(const Date::Date & date, int earning) {
-        earnings_db_.emplace_back(date,earning);
-
+struct Date {
+    bool operator<(const Date & oth) const {
+        return std::tuple(year,month,day) < std::tuple(oth.year,oth.month,oth.day);
     }
-    void Earn(const std::string & date_str, int earning) {
-        auto date = Date::Date(date_str);
-        earnings_db_.emplace_back(date,earning);
-    }
-
-
-
-    double ComputeIncome(const std::string & date_from,const std::string & date_to) {
-
-        if (!init_partial_sums_) ComputePartialSums();
-
-        auto tp_from = Date::Date(date_from);
-        auto tp_to = Date::Date(date_to);
-
-        auto temp{tp_from};
-        tp_from = std::min(tp_from,tp_to);
-        tp_to = std::max(temp,tp_to);
-
-        auto lb = std::lower_bound(begin(earnings_db_),end(earnings_db_),
-                                      std::make_pair(tp_from,0.0));
-        auto ub = std::upper_bound(begin(earnings_db_),end(earnings_db_),
-                                     std::make_pair(tp_to,0.0));
-
-        auto start = std::distance(begin(earnings_db_),lb);
-        auto end = std::distance(begin(earnings_db_),ub);
-
-        auto begin_earning = begin(partial_sums_) + start;
-        auto end_earning = begin(partial_sums_) + end;
-
-        return  (*end_earning - *begin_earning);
-
-    }
-private:
-    void ComputePartialSums(){
-        init_partial_sums_ = true;
-        std::vector<double> earnings;
-        std::vector<double> partial_sums;
-
-        std::sort(begin(earnings_db_),end(earnings_db_));
-
-        for (auto && i: earnings_db_) {
-            earnings.push_back(i.second);
-        }
-        partial_sums_.push_back(0);
-        std::partial_sum(std::begin(earnings),end(earnings), std::back_inserter(partial_sums_));
-        partial_sums_.push_back(partial_sums_.back());
-}
-private:
-    std::vector<std::pair<Date::Date,double>> earnings_db_;
-    std::vector<double> partial_sums_;
-    bool init_partial_sums_{false};
+    int year,month,day;
 };
+
+
+class BudgetManager {
+public:
+    BudgetManager() {
+        data_.resize(last_day_timestamp,0);
+        partials_.resize(last_day_timestamp,0);
+    }
+
+    void Earn(const std::string & date, uint64_t amount){
+
+        data_[ ParseDateToTimestamp(date)] += amount;
+    }
+
+    uint64_t ComputeIncome(const  std::string & start_date, const  std::string & end_date) {
+        if (!sums_computed_) ComputePartialSums();
+        auto startIndex = ParseDateToTimestamp(start_date);
+        auto endIndex = ParseDateToTimestamp(end_date);
+//        if (endIndex == startIndex) return  partials_[endIndex];
+        if (startIndex > 0){
+            return partials_[endIndex] - partials_[startIndex - 1];
+        } else if (startIndex == 0 || endIndex == 0){
+            return partials_[endIndex];
+        }
+        return partials_[endIndex] - partials_[startIndex];
+
+    }
+
+
+
+
+private:
+    void ComputePartialSums() {
+        std::partial_sum(begin(data_),end(data_),begin(partials_));
+        sums_computed_ = true;
+    }
+
+    std::vector<uint64_t> data_;
+    std::vector<uint64_t> partials_;
+    bool sums_computed_{false};
+
+};
+
 
 #if 1
 #include "test_runner.h"
 
 void test_1(){
     BudgetManager bm;
-    bm.Earn("2000-01-02",20);
-    bm.Earn("2000-01-03",10);
-    bm.Earn("2000-01-06",10);
-    bm.Earn("2000-01-07",10);
-    bm.Earn("2000-01-10",10);
-    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2000-01-02"),20);
-    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2000-01-03"),30);
-    ASSERT_EQUAL(bm.ComputeIncome("2000-01-02","2000-01-06"),40);
-    ASSERT_EQUAL(bm.ComputeIncome("2000-01-03","2000-01-06"),20);
-    ASSERT_EQUAL(bm.ComputeIncome("2000-01-03","2000-01-07"),30);
-    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2000-01-07"),50);
-    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2000-01-12"),60);
-    ASSERT_EQUAL(bm.ComputeIncome("2000-01-10","2000-01-10"),10);
-    ASSERT_EQUAL(bm.ComputeIncome("2000-01-12","2000-01-24"),0);
-    ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2000-01-01"),0);
-    ASSERT_EQUAL(bm.ComputeIncome("1999-01-01","2000-01-01"),0);
+    bm.Earn("1970-01-02",20);
+    bm.Earn("1970-01-03",10);
+    bm.Earn("1970-01-06",10);
+    bm.Earn("1970-01-07",10);
+    bm.Earn("1970-01-10",10);
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-10","1970-01-10"),10);
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-01","1970-01-02"),20);
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-01","1970-01-03"),30);
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-02","1970-01-06"),40);
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-03","1970-01-06"),20);
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-03","1970-01-07"),30);
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-01","1970-01-07"),50);
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-01","1970-01-12"),60);
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-01","1970-01-10"),60);
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-11","1970-01-11"),0);
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-09","1970-01-12"),10);
+
+
+
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-12","1970-01-24"),0);
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-01","1970-01-01"),0);
 
 
 }
 void test_2(){
     BudgetManager bm;
+    bm.Earn("1970-01-01",20);
+    ASSERT_EQUAL(bm.ComputeIncome("1970-01-01","1970-01-01"),20);
+
+
+}
+void test_3(){
+    BudgetManager bm;
     bm.Earn("2000-01-02",20);
     bm.Earn("2000-01-06",10);
     bm.Earn("2000-01-03",10);
+
     ASSERT_EQUAL(bm.ComputeIncome("2000-01-01","2000-01-02"),20);
-    ASSERT_EQUAL(bm.ComputeIncome("2000-01-02","2000-01-06"),40);
+    ASSERT_EQUAL(  bm.ComputeIncome("2000-01-02","2000-01-06"),40);
+
+}
+void test_4(){
+    BudgetManager bm;
+    bm.Earn("1700-01-01",20);
+    bm.Earn("1700-01-02",20);
+    bm.Earn("1700-01-03",20);
+    ASSERT_EQUAL(bm.ComputeIncome("1700-01-01","1700-01-01"),20);
+    ASSERT_EQUAL(bm.ComputeIncome("1700-01-02","1700-01-02"),20);
+    ASSERT_EQUAL(bm.ComputeIncome("1700-01-03","1700-01-03"),20);
+
+    ASSERT_EQUAL(bm.ComputeIncome("1700-01-01","1700-01-02"),40);
+    ASSERT_EQUAL(bm.ComputeIncome("1700-01-02","1700-01-03"),40);
+
+    ASSERT_EQUAL(bm.ComputeIncome("1700-01-01","1700-01-03"),60);
 
 
+}
+
+void test_5(){
+    BudgetManager bm;
+    bm.Earn("1700-01-02",20);
+    bm.Earn("1700-01-03",20);
+    ASSERT_EQUAL(bm.ComputeIncome("1700-01-01","1700-01-01"),0);
+    ASSERT_EQUAL(bm.ComputeIncome("1700-01-01","1700-01-02"),20);
+}
+void test_6(){
+    BudgetManager bm;
+    bm.Earn("1700-01-01",4'000'000'000);
+    bm.Earn("1700-01-02",4'000'000'000);
+    bm.Earn("2099-12-31",4'000'000'000);
+    ASSERT_EQUAL(bm.ComputeIncome("1700-01-01","1700-01-01"),4'000'000'000);
+    ASSERT_EQUAL(bm.ComputeIncome("1700-01-01","1700-01-03"),8'000'000'000);
+    ASSERT_EQUAL(bm.ComputeIncome("1700-01-04","1700-01-08"),0);
+    ASSERT_EQUAL(bm.ComputeIncome("1700-01-01","2099-12-31"),12'000'000'000);
 }
 #endif
 int main(){
@@ -230,8 +155,12 @@ int main(){
 #if 1
     TestRunner tr;
     RUN_TEST(tr,test_1);
+    RUN_TEST(tr,test_2);
+    RUN_TEST(tr,test_3);
+    RUN_TEST(tr,test_4);
+    RUN_TEST(tr,test_5);
+    RUN_TEST(tr,test_6);
 #endif
-
 
 
 #if 0

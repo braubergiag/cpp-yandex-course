@@ -1,3 +1,3 @@
 project(LoadIni)
 
-add_executable(${PROJECT_NAME} test_ini.cpp)
+add_executable(${PROJECT_NAME} test_ini.cpp ini.cpp)

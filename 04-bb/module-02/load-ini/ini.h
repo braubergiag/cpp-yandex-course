@@ -5,7 +5,7 @@
 using std::string;
 using std::unordered_map;
 
-namespace Ini{
+namespace Ini {
 
     using Section = unordered_map<string, string>;
 
@@ -27,8 +27,8 @@ namespace Ini{
         unordered_map<string, Section> sections;
     };
 
-    Document Load(std::istream& input){
 
-    }
+    Document Load(std::istream& input);
 
 }
+

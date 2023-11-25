@@ -1,5 +1,5 @@
 #include "xml.h"
-#include "test_runner.h"
+//#include "../test_runner.h"
 
 #include <algorithm>
 #include <iostream>
@@ -42,9 +42,18 @@ string MostExpensiveCategory(
 }
 
 vector<Spending> LoadFromXml(istream& input) {
-  // Реализуйте эту функцию с помощью библиотеки xml.h
-}
 
+    Document doc = Load(input);
+    std::vector<Spending> spendings;
+    for (auto node: doc.GetRoot().Children()) {
+        spendings.push_back({node.AttributeValue<string>("category"),
+                node.AttributeValue<int>("amount")});
+    }
+    return spendings;
+
+
+}
+#if 1
 void TestLoadFromXml() {
   istringstream xml_input(R"(<july>
     <spend amount="2500" category="food"></spend>
@@ -101,3 +110,4 @@ int main() {
   RUN_TEST(tr, TestXmlLibrary);
   RUN_TEST(tr, TestLoadFromXml);
 }
+#endif
